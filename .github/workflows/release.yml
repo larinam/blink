@@ -1,0 +1,73 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing release tag matching Info.plist, for example v1.1.1'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: xcode-27
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - name: Check out the release tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ inputs.tag || github.ref_name }}
+          persist-credentials: false
+
+      - name: Verify release version and toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Packaging/Info.plist)"
+          if [[ ! "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ || "$RELEASE_TAG" != "v$version" ]]; then
+            echo "Release tag must be v$version to match Packaging/Info.plist." >&2
+            exit 2
+          fi
+          source scripts/toolchain.sh
+          swift --version
+
+      - name: Run default tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/toolchain.sh
+          python3 scripts/test-release-workflows.py
+          swift test
+
+      - name: Package and verify the app
+        shell: bash
+        run: scripts/package-release.sh "${RELEASE_TAG#v}"
+
+      - name: Publish the numbered release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${RELEASE_TAG#v}"
+          output_dir="build/releases/$RELEASE_TAG"
+          gh release create "$RELEASE_TAG" \
+            "$output_dir"/*.zip "$output_dir/SHA256SUMS.txt" "$output_dir/build-info.json" \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag --latest \
+            --title "Blink $version (preview)" \
+            --notes-file "$output_dir/release-notes.md"
