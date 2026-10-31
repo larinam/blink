@@ -28,7 +28,7 @@ A passing timer test does not establish native acceptance, and an interrupted or
 
 ## Availability limits
 
-Sleep and display-sleep flags depend on workspace notifications. `AvailabilityClock` recovers suspension duration after a missed sleep notification, but cannot clear a flag left set by a dropped wake notification. Include notification-loss cases when investigating availability failures; ordinary sleep/wake observations do not cover them automatically.
+Sleep and display-sleep flags depend on workspace notifications. `AvailabilityClock` recovers suspension duration after a missed sleep notification. `SystemMonitor` clears a flag left set by a dropped wake notification once keyboard or pointer input arrives after it; until then, Blink keeps treating the Mac as unavailable. Include notification-loss cases when investigating availability failures; ordinary sleep/wake observations do not cover them automatically.
 
 ## Report a verification run
 

@@ -2,11 +2,11 @@
 
 ## Reporting a vulnerability
 
-Please report security issues by email to **larinam@gmail.com**, not in public issues or pull requests. Include the affected version or commit, steps to reproduce, and the impact you observed. You will get a reply once the report has been reviewed. Please keep the details private until a fix is available.
+Please report security issues privately, not in public issues or pull requests. Use GitHub's [private vulnerability reporting](https://github.com/larinam/blink/security/advisories/new) (**Security → Report a vulnerability**), or email **larinam@gmail.com** if you cannot use GitHub. Include the affected version or commit, steps to reproduce, and the impact you observed. You will get a reply once the report has been reviewed. Please keep the details private until a fix is available.
 
 ## Supported versions
 
-Blink is maintained on a best-effort basis. Fixes go into `main` and the next release; earlier releases do not receive backports. Release downloads are previews, as described in [release downloads](docs/releases.md).
+Blink is maintained on a best-effort basis. Fixes go into `main`, the next Development build, and the next numbered release; earlier releases do not receive backports. Release downloads are previews, as described in [release downloads](docs/releases.md).
 
 ## Scope
 

@@ -4,6 +4,12 @@ A native macOS menu bar app for small eye breaks, optional movement breaks, comp
 
 **Status:** preview. This guide describes the current source; packaged builds can differ. See [verification](docs/verification.md) for how changes are verified and which acceptance checks remain open.
 
+[Download the Development preview](https://github.com/larinam/blink/releases/tag/development) · [Build from source](#build-and-run-from-source)
+
+<p><img src="docs/images/blink-menu.jpg" width="340" alt="Blink menu showing eye, movement, and long-break timers, controls to start a break, and quiet-mode options."></p>
+
+*The menu with customized timings and movement reminders enabled.*
+
 ## Download and install
 
 Preview app downloads are distributed through [GitHub Releases](https://github.com/larinam/blink/releases). Numbered releases are fixed versions; the rolling **Development** pre-release follows `main` and is replaced by each new build. Download the ZIP and the checksum file from the same release. The ZIP contains `Blink.app`, installation instructions, and the MIT license. Xcode is only needed to build from source.
@@ -74,7 +80,7 @@ See the [documentation index](docs/README.md) for product requirements, architec
 
 ## Contributing and security
 
-See [Contributing](CONTRIBUTING.md) for development setup, checks, and pull request guidance. Report vulnerabilities privately using the contact in the [security policy](SECURITY.md).
+See [Contributing](CONTRIBUTING.md) for development setup, checks, and pull request guidance. Report vulnerabilities privately as described in the [security policy](SECURITY.md).
 
 ## License
 

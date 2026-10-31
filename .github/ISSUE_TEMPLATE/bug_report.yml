@@ -1,0 +1,40 @@
+name: Bug report
+description: Report unexpected behavior in Blink.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For security vulnerabilities, please [report privately](https://github.com/larinam/blink/security/advisories/new) instead of opening a public issue.
+  - type: input
+    id: build
+    attributes:
+      label: Blink version and build
+      description: Copy these from About Blink, or use the downloaded ZIP filename if the app cannot open. For a source build, include the commit if known.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: macOS version and Mac model
+      placeholder: macOS 26.1, MacBook Air M2
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Describe what you observed and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps or circumstances
+      description: Explain how to reproduce it, or what you were doing when it happened. Mention sleep, lock, or connected displays if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Additional details
+      description: Optional screenshots or error messages. Remove personal information before attaching files.

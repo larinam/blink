@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 import CoreGraphics
 import Testing
@@ -24,6 +25,85 @@ struct AdapterTests {
         #expect(monitor.isUnavailable)
         info = [console: true]
         #expect(!monitor.isUnavailable)
+    }
+
+    @Test("Input after a sleep flag recovers a dropped wake notification", arguments: [
+        NSWorkspace.willSleepNotification, NSWorkspace.screensDidSleepNotification,
+    ])
+    @MainActor
+    func droppedWakeRecovery(sleep: Notification.Name) {
+        // A private center keeps these notifications away from other tests' monitors.
+        let center = NotificationCenter()
+        var now: TimeInterval = 1000
+        var idle: TimeInterval? = 30
+        let monitor = SystemMonitor(sessionInfo: { [kCGSessionOnConsoleKey as String: true] },
+                                    inputIdle: { idle }, uptime: { now }, workspaceCenter: center)
+        defer { monitor.stop() }
+        #expect(!monitor.isUnavailable)
+        center.post(name: sleep, object: nil)
+        // No input since the flag (the last input was 30 s before it).
+        now = 1600
+        idle = 630
+        #expect(monitor.isUnavailable)
+        // Input time that cannot be read is not evidence of input.
+        for value in [nil, -1, .nan, .infinity] as [TimeInterval?] {
+            idle = value
+            #expect(monitor.isUnavailable)
+        }
+        // Input within the skew tolerance of the flag stays ambiguous.
+        idle = 599.5
+        #expect(monitor.isUnavailable)
+        // Clearly later input shows the user is back.
+        idle = 5
+        #expect(!monitor.isUnavailable)
+        // The recovery holds after the input ages.
+        idle = 500
+        #expect(!monitor.isUnavailable)
+    }
+
+    @Test("Input recovery leaves lock, inactive session and later sleeps intact")
+    @MainActor
+    func droppedWakeRecoveryBoundaries() {
+        let console = kCGSessionOnConsoleKey as String
+        let center = NotificationCenter()
+        var info: [String: Any]? = [console: true]
+        var now: TimeInterval = 1000
+        var idle: TimeInterval? = 0
+        let monitor = SystemMonitor(sessionInfo: { info }, inputIdle: { idle }, uptime: { now }, workspaceCenter: center)
+        defer { monitor.stop() }
+
+        // The keystroke that sleeps the display came before the flag, so it never clears it.
+        center.post(name: NSWorkspace.screensDidSleepNotification, object: nil)
+        now = 1060
+        idle = 60
+        #expect(monitor.isUnavailable)
+
+        // A later system sleep moves the mark: input between the two flags is not enough.
+        idle = 10
+        center.post(name: NSWorkspace.willSleepNotification, object: nil)
+        now = 1070
+        idle = 20
+        #expect(monitor.isUnavailable)
+
+        // Input clears both sleep flags but not a locked or inactive session.
+        info = [console: true, "CGSSessionScreenIsLocked": true]
+        idle = 2
+        #expect(monitor.isUnavailable)
+        info = [console: false]
+        #expect(monitor.isUnavailable)
+        info = [console: true]
+        #expect(!monitor.isUnavailable)
+
+        // Ordinary notifications still work without any input.
+        idle = nil
+        center.post(name: NSWorkspace.willSleepNotification, object: nil)
+        center.post(name: NSWorkspace.screensDidSleepNotification, object: nil)
+        #expect(monitor.isUnavailable)
+        center.post(name: NSWorkspace.didWakeNotification, object: nil)
+        #expect(monitor.isUnavailable)
+        center.post(name: NSWorkspace.screensDidWakeNotification, object: nil)
+        #expect(!monitor.isUnavailable)
+        #expect(monitor.idleSeconds == 0)
     }
 
     @Test("Clock difference recovers a missed sleep event without misclassifying a stall")

@@ -41,7 +41,7 @@ The workflow runs default tests, packages and verifies the ZIP, and publishes th
 
 You can also run **Actions → Release → Run workflow** with an existing tag. The workflow checks out that tag and requires it to exist on GitHub; it never creates a tag from a moving branch. If a release for that tag already exists, creation fails without replacing it.
 
-Because a numbered release is published as soon as the workflow finishes, check the recipient experience on the Development download of the same commit before tagging. A private repository's releases are visible only to people with repository access.
+Because a numbered release is published as soon as the workflow finishes, check the recipient experience on the Development download of the same commit before tagging. Published releases and their assets are public.
 
 ## Build a package locally
 

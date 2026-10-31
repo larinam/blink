@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/larinam/blink/security/advisories/new
+    about: Use GitHub private reporting; the security policy also provides an email fallback.
