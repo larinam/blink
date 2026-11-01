@@ -10,7 +10,7 @@ Blink is maintained on a best-effort basis. Fixes go into `main`, the next Devel
 
 ## Scope
 
-Blink runs locally and offline. It makes no network requests of its own (two reference links open in your browser only when clicked) and does not use the camera, microphone, screen recording, or input event taps. Relevant reports include:
+Blink runs locally and offline. It makes no network requests of its own. Two reference links open in your browser only when clicked. The Feedback page opens an email app or Gmail in your browser only when you choose that option, with no attachments or automatic sending. Blink does not use the camera, microphone, screen recording, or input event taps. Relevant reports include:
 
 - reading or changing saved state in `~/Library/Application Support/Blink/` in a way the app does not intend;
 - the global shortcut or system activity checks observing more than the [documented behavior](README.md#privacy-and-storage);

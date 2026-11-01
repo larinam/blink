@@ -29,6 +29,7 @@ struct VisualTests {
         _ = NSApplication.shared
         for (name, scheme, appearance) in [("light", ColorScheme.light, NSAppearance.Name.aqua), ("dark", ColorScheme.dark, NSAppearance.Name.darkAqua)] {
             try render(AppWindowView(model: model, selection: .settings), size: NSSize(width: 850, height: 720), scheme: scheme, appearance: appearance, to: directory.appendingPathComponent("settings-\(name).png"))
+            try render(AppWindowView(model: model, selection: .feedback), size: NSSize(width: 850, height: 708), scheme: scheme, appearance: appearance, to: directory.appendingPathComponent("feedback-\(name).png"))
             try render(AppWindowView(model: model, selection: .today), size: NSSize(width: 850, height: 720), scheme: scheme, appearance: appearance, to: directory.appendingPathComponent("today-\(name).png"))
             try render(OnboardingView(model: model), size: NSSize(width: 650, height: 705), scheme: scheme, appearance: appearance, to: directory.appendingPathComponent("onboarding-\(name).png"))
             try render(MenuView(model: model, openPage: { _ in }, close: {}, quit: {}).fixedSize(), size: NSSize(width: 368, height: 480), scheme: scheme, appearance: appearance, to: directory.appendingPathComponent("menu-\(name).png"), fitContent: true)

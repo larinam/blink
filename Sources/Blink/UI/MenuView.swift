@@ -5,12 +5,14 @@ enum AppPage: String, CaseIterable, Identifiable {
     case settings = "Settings"
     case today = "Today"
     case guide = "Screen setup"
+    case feedback = "Feedback"
     var id: String { rawValue }
     var symbol: String {
         switch self {
         case .settings: "slider.horizontal.3"
         case .today: "chart.bar.xaxis"
         case .guide: "display"
+        case .feedback: "envelope"
         }
     }
 }
@@ -114,6 +116,9 @@ struct MenuView: View {
             }
 
             Divider()
+            Button { openPage(.feedback) } label: {
+                Label("Send feedback", systemImage: "envelope").actionTarget(expands: true)
+            }.buttonStyle(.bordered).controlSize(.large).font(.system(size: 12))
             HStack(spacing: 10) {
                 Button { openPage(.today) } label: { Label("Today", systemImage: "chart.bar.xaxis").actionTarget() }
                 Button { openPage(.settings) } label: { Label("Settings", systemImage: "slider.horizontal.3").actionTarget() }

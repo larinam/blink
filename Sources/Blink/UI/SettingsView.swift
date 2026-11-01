@@ -267,6 +267,7 @@ struct AppWindowView: View {
                 case .settings: SettingsView(model: model, editor: session.settings)
                 case .today: TodayView(model: model).padding(28)
                 case .guide: ScrollView { ScreenGuide().padding(28) }
+                case .feedback: ScrollView { FeedbackView().padding(28) }
                 }
             }.frame(maxWidth: .infinity, maxHeight: .infinity)
         }

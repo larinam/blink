@@ -60,11 +60,11 @@ struct HitTargetTests {
         let window = host(MenuView(model: model, openPage: { pages.append($0) }, close: {}, quit: { quits += 1 }).fixedSize())
         defer { window.close() }
         let view = try #require(window.contentView)
-        let targets = try buttonFrames(in: view, expected: 10)
-        for target in targets.suffix(3) {
+        let targets = try buttonFrames(in: view, expected: 11)
+        for target in targets.suffix(4) {
             click(NSPoint(x: target.minX + 4, y: target.midY), in: window)
         }
-        #expect(pages == [.today, .settings])
+        #expect(pages == [.feedback, .today, .settings])
         #expect(quits == 1)
     }
 
@@ -75,12 +75,46 @@ struct HitTargetTests {
         let window = host(SidebarNavigation(selection: Binding(get: { selection }, set: { selection = $0 }))
             .padding(17).frame(width: 170))
         defer { window.close() }
-        let targets = try buttonFrames(in: #require(window.contentView), expected: 3)
+        let targets = try buttonFrames(in: #require(window.contentView), expected: 4)
         for (index, target) in targets.enumerated() {
             // The far-right part of every row is empty, including "Screen setup".
             click(NSPoint(x: target.maxX - 4, y: target.midY), in: window)
             #expect(selection == AppPage.allCases[index])
         }
+    }
+
+    @Test("Feedback keeps Gmail and copy available after the email handler accepts a URL")
+    @MainActor
+    func feedbackActions() throws {
+        var opened: [String] = []
+        let window = host(FeedbackView().padding(28).frame(width: 628, height: 600)
+            .environment(\.openURL, OpenURLAction { url in
+                opened.append(url.absoluteString)
+                return .handled
+            }))
+        defer { window.close() }
+        let targets = try buttonFrames(in: #require(window.contentView), expected: 3)
+        for target in targets.prefix(2) {
+            click(NSPoint(x: target.minX + 4, y: target.midY), in: window)
+        }
+        #expect(opened == ["mailto:blink@wellkernel.com?subject=Blink%20feedback",
+                           "https://mail.google.com/mail/?view=cm&fs=1&to=blink@wellkernel.com&su=Blink%20feedback"])
+
+        let pasteboard = NSPasteboard.general
+        let savedItems = (pasteboard.pasteboardItems ?? []).map { item in
+            let saved = NSPasteboardItem()
+            for type in item.types {
+                if let data = item.data(forType: type) { saved.setData(data, forType: type) }
+            }
+            return saved
+        }
+        defer {
+            pasteboard.clearContents()
+            if !savedItems.isEmpty { pasteboard.writeObjects(savedItems) }
+        }
+        let copy = try #require(targets.last)
+        click(NSPoint(x: copy.minX + 4, y: copy.midY), in: window)
+        #expect(pasteboard.string(forType: .string) == "blink@wellkernel.com")
     }
 
     @Test("Guide links have native button targets and open only their intended URLs")

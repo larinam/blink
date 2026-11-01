@@ -123,7 +123,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
 
     private func showPage(_ page: AppPage) {
         popover.performClose(nil)
-        if !model.snapshot.settings.onboardingComplete { showOnboarding(); return }
+        if !model.snapshot.settings.onboardingComplete && page != .feedback { showOnboarding(); return }
         if mainWindow == nil {
             let session = AppWindowSession(settings: model.snapshot.settings, selection: page)
             windowSession = session

@@ -49,6 +49,7 @@ Open `Package.swift` in Xcode to work on the source. `scripts/build.sh debug` cr
 - Settings includes independent switches, timing controls, previews, completion sound, and optional launch at login. Save applies reminder edits; changing a timer restarts that schedule. Unsaved edits survive page changes and closing/reopening Settings until Blink quits. Launch at login applies immediately.
 - Restoring recommended defaults turns optional movement reminders off; enable them again to resume the hourly schedule.
 - Today contains timed eye, movement, and long-break completions, skipped/ended-early breaks, and snooze actions. It resets at local midnight. Natural absences adjust the schedule without adding guided completions.
+- Choose **Send feedback** in the menu or **Feedback** in the app’s sidebar to write to **blink@wellkernel.com**. Open your email app, open a Gmail draft directly, or copy the address for another email service.
 
 On a U.S. keyboard, press **⌃⌥⌘B** (Control–Option–Command–B) from any app to open Blink. Settings shows the corresponding key for your current keyboard layout and updates when it changes. It registers only that shortcut with macOS and does not monitor ordinary keystrokes. Settings reports if another registration prevents the shortcut from being available.
 
@@ -59,6 +60,8 @@ While Blink is active, **⌘,** opens Settings, **⇧⌘R** opens the current re
 ## Privacy and storage
 
 Blink works offline. It does not use the camera, microphone, screen recording, input event taps, accounts, or telemetry. The inactivity check reads elapsed time since input; it does not read what you type.
+
+The Feedback page opens your email app or Gmail only when you choose that option, with the recipient and subject filled in. Blink attaches no data and sends nothing automatically; you choose what to write and send.
 
 Settings, schedule progress, and today's counters are stored atomically in:
 
